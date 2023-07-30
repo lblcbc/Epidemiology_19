@@ -43,8 +43,8 @@ class Population:
         self.home_location = home_location
         self.is_kid = 1 <= self.age < 20
         self.is_young = 20 <= self.age < 26 
-        self.is_parent = 26 <= self.age < 56
-        self.is_grandparent = 56 <= self.age
+        self.is_parent = 26 <= self.age < 53
+        self.is_grandparent = 53 <= self.age
         self.is_adult = 20 <= self.age
         self.is_working_age = 20 <= self.age <= 65 # we ignore university, we will only have school for kids
         
@@ -84,7 +84,7 @@ def generate_population_and_assign_houses(population_size, grid_size):
     random.shuffle(kids)
 
     
-
+    all_grandparents = []
     all_parents = []  # List to store all parents for assigning their parents later
     all_youngs = []  # List to store all youngs for assigning their grandparents later
     all_kids = [] #List to store all kids for assigning their grandparents later
@@ -99,7 +99,7 @@ def generate_population_and_assign_houses(population_size, grid_size):
 
         # If there's only one or two parents left, they will take all the remaining kids
         if len(parents) not in {1, 2}:
-            num_kids = random.randint(1, 4)  # Select 1-4 kids
+            num_kids = random.randint(1, 5)  # Select 1-4 kids
         else:  # Otherwise, decide randomly how many kids will live in this house
             num_kids = len(kids)
 
@@ -139,38 +139,65 @@ def generate_population_and_assign_houses(population_size, grid_size):
             all_youngs.append(young)  # Add each young to the all_youngs list
 
     # Assign each elder to a separate house and link them to adults
-    for grandparent in grandparents:
-
+    while grandparents:
+        num_grandparents = random.randint(1, 2)
         house = House(None)
-        grandparent.home_location = house.location
-        house.inhabitants.append(grandparent)
+        current_grandparents = [] # Temporary list to keep track of grandparents in this iteration
+
+        for _ in range(num_grandparents):
+            if grandparents:
+                grandparent = grandparents.pop()
+                grandparent.home_location = house.location
+                house.inhabitants.append(grandparent)
+                current_grandparents.append(grandparent)
+                all_grandparents.append(grandparent)
+        
         houses.append(house)
 
-        # Link the elder to a random adult (as a parent) if any left
-        if all_parents or all_youngs:
+
+        # Link each grandparent in a house to parent and kid or young adults
+        parents_wo_grandparents = [parent for parent in all_parents if len(parent.parents) == 0]
+        youngs_wo_grandparents = [young for young in all_youngs if len(young.grandparents) == 0]
+
+        if parents_wo_grandparents and youngs_wo_grandparents:
             if random.choice([True, False]):
-                if all_parents:
-                    random_parent = random.choice(all_parents)
-                    random_parent.parents.append(grandparent)
-                    
-        
-                    for kid in all_kids:
-                        if random_parent in kid.parents and grandparent not in kid.grandparents:
-                            kid.grandparents.append(grandparent)
+                    for grandparent in current_grandparents: 
+                        random_parent = random.choice(parents_wo_grandparents)
+                        random_parent.parents.append(grandparent)
+            
+                        for kid in all_kids:
+                            if random_parent in kid.parents and grandparent not in kid.grandparents:
+                                kid.grandparents.append(grandparent)
 
-                    #for house in houses:
-                        #for person in house.inhabitants:
-                            #if person.id == random_parent.id:
-                                #for person in house.inhabitants:
-                                    #if person.is_kid and grandparent not in person.grandparents:
-                                        #person.grandparents.append(grandparent)
+                        #for house in houses:
+                            #for person in house.inhabitants:
+                                #if person.id == random_parent.id:
+                                    #for person in house.inhabitants:
+                                        #if person.is_kid and grandparent not in person.grandparents:
+                                            #person.grandparents.append(grandparent)
 
-                    # The above would also work, but is less efficienct
-                 
+                        # The above would also work, but is less efficienct
+                
             else:
-                if all_youngs:
-                    random_young = random.choice(all_youngs)
-                    random_young.parents.append(grandparent)
+                for grandparent in current_grandparents: 
+                    random_young = random.choice(youngs_wo_grandparents)
+                    random_young.grandparents.append(grandparent)
+        
+        elif parents_wo_grandparents:
+            for grandparent in current_grandparents:
+                random_parent = random.choice(parents_wo_grandparents)
+                random_parent.parents.append(grandparent)
+    
+                for kid in all_kids:
+                    if random_parent in kid.parents and grandparent not in kid.grandparents:
+                        kid.grandparents.append(grandparent)
+        
+        elif youngs_wo_grandparents:
+            for grandparent in current_grandparents:
+                random_young = random.choice(youngs_wo_grandparents)
+                random_young.grandparents.append(grandparent)
+
+    
 
     # Generate random locations
     locations = [Location(x, y) for x in range(grid_size) for y in range(grid_size)]
@@ -223,7 +250,7 @@ for person in population:
     elif person.is_kid:
         print(f"Age: {person.age}, House Location: {person.home_location}, id: {person.id} "
             f"Parents: {', '.join(['id: ' + str(parent.id) for parent in person.parents])}, "
-            f"Grandparents: {', '.join(['id: ' + str(grandparent.id) for grandparent in person.grandparents])}")
+            f"Grandparents: {', '.join(['id: ' + str(grandparent.id) for grandparent in person.grandparents])}, ")
     else:
         print(f"Age: {person.age}, House Location: {person.home_location}, id: {person.id} ")
 
