@@ -1,7 +1,8 @@
 import random
 import math
 
-GRID_SIZE = 10
+POPULATION_SIZE = 500
+GRID_SIZE = 30
 AGE_DISTRIBUTION = [0.16, 0.17, 0.158, 0.140, 0.120, 0.108, 0.08, 0.04, 0.014, 0.01]
 AGE_DISTRIBUTION_EXPANDED = [weight for weight in AGE_DISTRIBUTION for _ in range(10)]  # Repeat each weight 10 times
 
@@ -167,17 +168,7 @@ def generate_population_and_assign_houses(population_size, grid_size):
             
                         for kid in all_kids:
                             if random_parent in kid.parents and grandparent not in kid.grandparents:
-                                kid.grandparents.append(grandparent)
-
-                        #for house in houses:
-                            #for person in house.inhabitants:
-                                #if person.id == random_parent.id:
-                                    #for person in house.inhabitants:
-                                        #if person.is_kid and grandparent not in person.grandparents:
-                                            #person.grandparents.append(grandparent)
-
-                        # The above would also work, but is less efficienct
-                
+                                kid.grandparents.append(grandparent)                
             else:
                 for grandparent in current_grandparents: 
                     random_young = random.choice(youngs_wo_grandparents)
@@ -236,7 +227,7 @@ def print_grid_numbers(houses, grid_size):
     return [' '.join(str(cell) for cell in row) for row in grid]
 
 # Get the population and houses
-population, houses = generate_population_and_assign_houses(35, GRID_SIZE)
+population, houses = generate_population_and_assign_houses(POPULATION_SIZE, GRID_SIZE)
 
 # Print the population
 for person in population:
