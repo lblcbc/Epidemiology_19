@@ -14,6 +14,18 @@ RECOVERY_PERIOD = 10 # days, until then you are still infectious
 
 AGE_DISTRIBUTION = [0.16, 0.17, 0.158, 0.140, 0.120, 0.108, 0.08, 0.04, 0.014, 0.01]
 AGE_DISTRIBUTION_EXPANDED = [weight for weight in AGE_DISTRIBUTION for _ in range(10)]  # Repeat each weight 10 times
+mortality_rate = {
+    9: 0.148, # 90 - 99 yo, I handle the 100 yo case in my assign_mortality_rate function.
+    8: 0.148, 
+    7: 0.08, 
+    6: 0.036, 
+    5: 0.013, 
+    4: 0.004, 
+    3: 0.002, 
+    2: 0.002, 
+    1: 0.002, # 10 - 19 yo  
+    0: 0.000 # 0 - 9 yo
+}
 
 NUM_DAYS = 50
 
@@ -125,43 +137,37 @@ class Outdoor(Area):
 
 class Population:
     def __init__(self, age, id=None):
-        self.age = age
         self.id = id
+        
+        self.age = age
         self.is_kid = 1 <= self.age < 20
         self.is_young = 20 <= self.age < 26 
         self.is_parent = 26 <= self.age < 53
         self.is_grandparent = 53 <= self.age
         self.is_adult = 20 <= self.age
         self.is_working_age = 20 <= self.age <= 65 # we ignore university, we will only have school for kids
+        
         self.parents = []
         self.grandparents = []
+        
         self.location = None
         self.house_location = None
         self.workplace_location = None
         self.store_location = None
         self.outdoor_location = None
+        
         self.is_working = False
         self.is_shopping = False
+        
+        self.mortality_rate = None
         self.interactions = 0
         self.infection_probability = 0
         self.infected = False
         self.infectious = False
-        self.infected_today = False
-    
-    def determine_infection(self, infection_probability):
-        if random.random() < infection_probability:
-            self.infected = True
+        self.days_infected = 0
+        self.life_fulfilled = 5 # day after infection which person may die, having peacefully and happily fufilled their life, default is half of 10 (recovery_period)
 
 
-
-def calculate_infections(areas):
-        for area in areas:
-            for person in area.inhabitants:
-                if not person.infected:
-                    infectious_count = len([person for person in area.inhabitants if person.infectious])
-                    person.interactions += infectious_count
-                    person.infection_probability = area.scaled_infection_probability(person.interactions)
-                    person.determine_infection(person.infection_probability)
 
 
 def generate_population_and_assign_houses(population_size, grid_size):
@@ -357,6 +363,54 @@ def generate_outdoors(grid_size, houses, stores, workplaces):
     return outdoors
 
 
+
+def assign_mortality_rates(population):
+    for person in population:
+        age_group = person.age // 10  # This will give values like 1 for [10, 19], 2 for [20, 29], and so on.
+        
+        if age_group == 10: # Handle edge case for age 100
+            age_group = 9
+        
+        person.mortality_rate = mortality_rate[age_group]
+
+
+def determine_infection(person, infection_probability):
+        if random.random() < infection_probability:
+            person.infected = True
+            person.days_infected = 1
+            person.life_fufilled = random.randint(1,10)
+
+def calculate_infections(areas):
+        for area in areas:
+            for person in area.inhabitants:
+                if not person.infected:
+                    infectious_count = len([person for person in area.inhabitants if person.infectious])
+                    person.interactions += infectious_count
+                    person.infection_probability = area.scaled_infection_probability(person.interactions)
+                    determine_infection(person, person.infection_probability)
+
+
+def update_infected(population):
+    for person in population:
+        if person.infected:
+            person.days_infected += 1
+            if person.days_infected == person.life_fulfilled:
+                if random.random() < person.mortality_rate:
+                    population.remove(person)
+                else:
+                    person.life_fulfilled = 20 # arbitrary number high enough to ensure recovery
+            if person.days_infected > 10:
+                person.days_infected = 0
+                person.infected = False
+                person.infectious = False
+                person.life_fulfilled = 5
+                #person.immunity_days = 50
+
+            
+
+
+
+
 def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
     for area in stores + workplaces + outdoors: # for areas not houses, as inhabitants for other areas just used to check and satisfy area capacities
         area.inhabitants = []
@@ -383,7 +437,11 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                     person.interactions = 0
                     person.infection_probability = 0
                     if person.infected:
-                        person.infectious = True
+                        person.infectious = True 
+                        # we have this as a separate case to make it a bit more realisitc that a person is only infectious day after catching disease, 
+                        # this also helped delay infection speeds a bit for this simulation
+                update_infected(population)
+
                 
                 healthy_count = len([person for person in population if not person.infected])
                 infection_count = len([person for person in population if person.infected])
@@ -456,6 +514,8 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                 infection_count = len([person for person in population if person.infected])
                 print(f"Day: {day}, Step: {step}, Healthy: {healthy_count}, Infected: {infection_count}")
                 print_grids(houses, stores, workplaces, outdoors, GRID_SIZE)
+
+                
                 
 
 
@@ -538,6 +598,7 @@ def check_grid(population_size, grid_size):
 def sim():
     check_grid(POPULATION_SIZE, GRID_SIZE)
     population, houses = generate_population_and_assign_houses(POPULATION_SIZE, GRID_SIZE)
+    assign_mortality_rates(population)
     stores = generate_stores(population, STORE_CAPACITY, GRID_SIZE, houses)
     workplaces = generate_workplaces(population, WORKPLACE_CAPACITY, GRID_SIZE, houses, stores)
     outdoors = generate_outdoors(GRID_SIZE, houses, stores, workplaces)
