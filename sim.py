@@ -5,10 +5,12 @@ from termcolor import colored
 
 
 POPULATION_SIZE = 100
-GRID_SIZE = 10
+GRID_SIZE = 12
 STORE_CAPACITY = 20
 WORKPLACE_CAPACITY = 14
-INITIAL_INFECTIONS = 0.05*POPULATION_SIZE
+INITIAL_INFECTIONS = 0.02*POPULATION_SIZE
+RECOVERY_PERIOD = 10 # days, until then you are still infectious
+
 
 AGE_DISTRIBUTION = [0.16, 0.17, 0.158, 0.140, 0.120, 0.108, 0.08, 0.04, 0.014, 0.01]
 AGE_DISTRIBUTION_EXPANDED = [weight for weight in AGE_DISTRIBUTION for _ in range(10)]  # Repeat each weight 10 times
@@ -73,18 +75,6 @@ class Area:
                 area.inhabitants.append(person)
                 person.location = target_location
                 break
-
-    
-    @staticmethod
-    def calculate_infections(areas):
-        for area in areas:
-            for person in area.inhabitants:
-                if not person.infected:
-                    infected_count = len([person for person in area.inhabitants if person.infected])
-                    person.interactions += infected_count - 1
-                    person.infection_probability = area.scaled_infection_probability(person.interactions)
-                    person.determine_infection(person.infection_probability)
-
 
 
 class House(Area):
@@ -155,12 +145,23 @@ class Population:
         self.interactions = 0
         self.infection_probability = 0
         self.infected = False
+        self.infectious = False
         self.infected_today = False
     
     def determine_infection(self, infection_probability):
         if random.random() < infection_probability:
             self.infected = True
 
+
+
+def calculate_infections(areas):
+        for area in areas:
+            for person in area.inhabitants:
+                if not person.infected:
+                    infectious_count = len([person for person in area.inhabitants if person.infectious])
+                    person.interactions += infectious_count
+                    person.infection_probability = area.scaled_infection_probability(person.interactions)
+                    person.determine_infection(person.infection_probability)
 
 
 def generate_population_and_assign_houses(population_size, grid_size):
@@ -367,6 +368,7 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
     initally_infected = random.sample(population, int(INITIAL_INFECTIONS))
     for person in initally_infected:
         person.infected = True
+        person.infectious = True
 
     for person in population:
         person.location = person.house_location
@@ -380,6 +382,8 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                 for person in population:
                     person.interactions = 0
                     person.infection_probability = 0
+                    if person.infected:
+                        person.infectious = True
                 
                 healthy_count = len([person for person in population if not person.infected])
                 infection_count = len([person for person in population if person.infected])
@@ -400,8 +404,8 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                         Area.move_out(person, House)
                         Area.move_in(person, Store)
 
-                Area.calculate_infections(workplaces)
-                Area.calculate_infections(stores)
+                calculate_infections(workplaces)
+                calculate_infections(stores)
 
                 healthy_count = len([person for person in population if not person.infected])
                 infection_count = len([person for person in population if person.infected])
@@ -446,7 +450,7 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                         Area.move_out(person, Store)
                         Area.move_in(person, House)
 
-                Area.calculate_infections(houses)
+                calculate_infections(houses)
 
                 healthy_count = len([person for person in population if not person.infected])
                 infection_count = len([person for person in population if person.infected])
@@ -547,3 +551,4 @@ def sim():
     simulate_day(population, houses, workplaces, stores, outdoors, NUM_DAYS)
 
 sim()
+
