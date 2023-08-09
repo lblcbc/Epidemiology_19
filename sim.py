@@ -1,15 +1,18 @@
 import random
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 from termcolor import colored
+import seaborn as sns
 
 
-POPULATION_SIZE = 100
-GRID_SIZE = 12
+POPULATION_SIZE = 400
+GRID_SIZE = 20 
 STORE_CAPACITY = 20
 WORKPLACE_CAPACITY = 14
-INITIAL_INFECTIONS = 0.02*POPULATION_SIZE
+INITIAL_INFECTIONS = 0.05*POPULATION_SIZE
 RECOVERY_PERIOD = 10 # days, until then you are still infectious
+IMMUNITY_PERIOD = 50 # studies showed 8-10  months immunity
 
 
 AGE_DISTRIBUTION = [0.16, 0.17, 0.158, 0.140, 0.120, 0.108, 0.08, 0.04, 0.014, 0.01]
@@ -27,7 +30,7 @@ mortality_rate = {
     0: 0.000 # 0 - 9 yo
 }
 
-NUM_DAYS = 50
+NUM_DAYS = 800
 
 # Location class, represents single points on the grid
 class Location:
@@ -94,7 +97,7 @@ class House(Area):
         super().__init__(location)
         self.symbol = "H"
 
-    def scaled_infection_probability(self, interactions, max_prob = 0.6, steepness = 0.5, midpoint = 0):
+    def scaled_infection_probability(self, interactions, max_prob = 0.60, steepness = 0.5, midpoint = 0):
         if interactions == 0:
             return 0
         else:
@@ -166,6 +169,8 @@ class Population:
         self.infectious = False
         self.days_infected = 0
         self.life_fulfilled = 5 # day after infection which person may die, having peacefully and happily fufilled their life, default is half of 10 (recovery_period)
+        self.immune = False
+        self.immunity_days = 0
 
 
 
@@ -383,20 +388,24 @@ def determine_infection(person, infection_probability):
 def calculate_infections(areas):
         for area in areas:
             for person in area.inhabitants:
-                if not person.infected:
+                if not person.infected and not person.immune:
                     infectious_count = len([person for person in area.inhabitants if person.infectious])
                     person.interactions += infectious_count
                     person.infection_probability = area.scaled_infection_probability(person.interactions)
                     determine_infection(person, person.infection_probability)
 
 
-def update_infected(population):
+def update_infected(population, houses):
     for person in population:
         if person.infected:
             person.days_infected += 1
             if person.days_infected == person.life_fulfilled:
                 if random.random() < person.mortality_rate:
                     population.remove(person)
+                    for house in houses:
+                        if house.location == person.house_location:
+                            house.inhabitants.remove(person) 
+                    continue
                 else:
                     person.life_fulfilled = 20 # arbitrary number high enough to ensure recovery
             if person.days_infected > 10:
@@ -404,12 +413,19 @@ def update_infected(population):
                 person.infected = False
                 person.infectious = False
                 person.life_fulfilled = 5
-                #person.immunity_days = 50
+                person.immune = True
+        if person.immune:
+                person.immunity_days += 1
+                if person.immunity_days > IMMUNITY_PERIOD:
+                    person.immunity_days = 0
+                    person.immune = False
 
-            
 
 
-
+infected_count = []
+healthy_count = []
+immune_count = []
+death_count = []
 
 def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
     for area in stores + workplaces + outdoors: # for areas not houses, as inhabitants for other areas just used to check and satisfy area capacities
@@ -440,14 +456,27 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                         person.infectious = True 
                         # we have this as a separate case to make it a bit more realisitc that a person is only infectious day after catching disease, 
                         # this also helped delay infection speeds a bit for this simulation
-                update_infected(population)
+                new_random_infections = random.sample(population, int(0.01*POPULATION_SIZE)) # TODO: create this through travel, then at some point i have to be happy with it!
+                for person in new_random_infections:
+                    person.infected = True
+                    person.infectious = True
 
-                
-                healthy_count = len([person for person in population if not person.infected])
-                infection_count = len([person for person in population if person.infected])
+                update_infected(population, houses)
+
+
+                # TODO: MOVE SOME OF THIS LOGIC INTO ABOVE THE STEP, AND UNDER THE DAY, BECAUSE ITS NOT STEP SPECIFIC I FEEL
+                # TODO: I SHOULD ADD A TRAVEL FEATURE THAT IF PERSON NOT WORKING OR SHOPPING, THEN THEY EITHER GO OUTSIDE, OR THEY TRAVEL, AND TRAVELING CARRIES A FIXED RISK OF GETTING INFECTED
+                # THIS WAY WE INTRODUCE NEW INFECTIONS, BECAUSE IN A COMPLETELY CLOSED SOCIETY HERD IMMUNITY WOULD OCCUR QUITE QUICKLY AFTER INFECTIONS AND DEATHS
+                healthy_count.append(len([person for person in population if not person.infected and not person.immune]))
+                immune_count.append(len([person for person in population if person.immune]))
+                infected_count.append(len([person for person in population if person.infected]))
+                death_count.append(POPULATION_SIZE - healthy_count[-1] - infected_count[-1] - immune_count[-1])
                 # here i will append these counts to a plot, only here at step == 0 so 1 a day, not at the next steps
-                print(f"Day: {day}, Step: {step}, Healthy: {healthy_count}, Infected: {infection_count}")
-                print_grids(houses, stores, workplaces, outdoors, GRID_SIZE)
+                
+                if day == 0 or day % 100 == 0:
+                    print(f"Day: {day}, Healthy: {healthy_count[-1]}, Infected: {infected_count[-1]}, Immune: {immune_count[-1]}, Passed: {death_count[-1]}")
+                    print_grids(houses, stores, workplaces, outdoors, GRID_SIZE)
+
 
             elif step == 1:
                 for person in population:
@@ -465,10 +494,6 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                 calculate_infections(workplaces)
                 calculate_infections(stores)
 
-                healthy_count = len([person for person in population if not person.infected])
-                infection_count = len([person for person in population if person.infected])
-                print(f"Day: {day}, Step: {step}, Healthy: {healthy_count}, Infected: {infection_count}")
-                print_grids(houses, stores, workplaces, outdoors, GRID_SIZE)
 
             elif step == 2:
                 for person in population:
@@ -496,11 +521,6 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                     # and longer would be people still wanting to go to work etc.
                     # may need to change the working logic to is_working to is_working_in_office
                     # this way i can still assing 60% is working, and then 50/50 split (and others) that we do remote, and then further condition that if any infected they don't go in (even if part of 50 that are assigned to work at the office)
-                
-                healthy_count = len([person for person in population if not person.infected])
-                infection_count = len([person for person in population if person.infected])
-                print(f"Day: {day}, Step: {step}, Healthy: {healthy_count}, Infected: {infection_count}")
-                print_grids(houses, stores, workplaces, outdoors, GRID_SIZE)
 
             elif step == 3:
                 for person in population:
@@ -510,14 +530,8 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
 
                 calculate_infections(houses)
 
-                healthy_count = len([person for person in population if not person.infected])
-                infection_count = len([person for person in population if person.infected])
-                print(f"Day: {day}, Step: {step}, Healthy: {healthy_count}, Infected: {infection_count}")
-                print_grids(houses, stores, workplaces, outdoors, GRID_SIZE)
 
                 
-                
-
 
 
 def print_grids(houses, stores, workplaces, outdoors, grid_size):
@@ -595,6 +609,24 @@ def check_grid(population_size, grid_size):
         raise ValueError("GRID IS TOO SMALL!")
 
 
+
+def plot_counts(healthy_count, infected_count, death_count, immune_count):
+    days = list(range(len(healthy_count)))
+
+    sns.set_style("darkgrid")
+    
+    plt.plot(days, healthy_count, label='Healthy', color='blue', linewidth=2)
+    plt.plot(days, infected_count, label='Infected', color='orange', linewidth=2)
+    plt.plot(days, immune_count, label='Immune', color='green', linewidth=2)
+    plt.plot(days, death_count, label='Deaths', color='red', linewidth=2)
+    
+    plt.xlabel('Days')
+    plt.ylabel('Count')
+    plt.title('Population Status Over Time')
+    plt.legend()
+    plt.show()
+
+
 def sim():
     check_grid(POPULATION_SIZE, GRID_SIZE)
     population, houses = generate_population_and_assign_houses(POPULATION_SIZE, GRID_SIZE)
@@ -610,6 +642,7 @@ def sim():
     print_grids(houses, stores, workplaces, outdoors, GRID_SIZE)
     print()
     simulate_day(population, houses, workplaces, stores, outdoors, NUM_DAYS)
+    plot_counts(healthy_count, infected_count, death_count, immune_count)
 
 sim()
 
