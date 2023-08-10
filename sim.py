@@ -404,7 +404,6 @@ def update_infected(population, houses):
             if person.days_infected == person.life_fulfilled:
                 if random.random() < person.mortality_rate:
                     population.remove(person)
-                    person.infected = False
                     for house in houses:
                         if house.location == person.house_location:
                             house.inhabitants.remove(person) 
