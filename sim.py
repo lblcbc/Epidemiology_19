@@ -10,9 +10,9 @@ POPULATION_SIZE = 400
 GRID_SIZE = 20 
 STORE_CAPACITY = 20
 WORKPLACE_CAPACITY = 14
-INITIAL_INFECTIONS = 0.05*POPULATION_SIZE
+INITIAL_INFECTIONS = 0.02*POPULATION_SIZE
 RECOVERY_PERIOD = 10 # days, until then you are still infectious
-IMMUNITY_PERIOD = 50 # studies showed 8-10  months immunity
+IMMUNITY_PERIOD = 100 # studies showed 8-10  months immunity
 
 
 AGE_DISTRIBUTION = [0.16, 0.17, 0.158, 0.140, 0.120, 0.108, 0.08, 0.04, 0.014, 0.01]
@@ -30,7 +30,7 @@ mortality_rate = {
     0: 0.000 # 0 - 9 yo
 }
 
-NUM_DAYS = 800
+NUM_DAYS = 365
 
 # Location class, represents single points on the grid
 class Location:
@@ -161,6 +161,8 @@ class Population:
         
         self.is_working = False
         self.is_shopping = False
+        self.is_travelling = False
+        self.is_walking = False
         
         self.mortality_rate = None
         self.interactions = 0
@@ -402,6 +404,7 @@ def update_infected(population, houses):
             if person.days_infected == person.life_fulfilled:
                 if random.random() < person.mortality_rate:
                     population.remove(person)
+                    person.infected = False
                     for house in houses:
                         if house.location == person.house_location:
                             house.inhabitants.remove(person) 
@@ -450,23 +453,22 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
         for step in range(4):
             if step == 0:
                 for person in population:
+                    # Reset daily attributes
                     person.interactions = 0
                     person.infection_probability = 0
+                    person.is_shopping = False
+                    person.is_travelling = False
+                    person.is_walking = False
                     if person.infected:
                         person.infectious = True 
                         # we have this as a separate case to make it a bit more realisitc that a person is only infectious day after catching disease, 
                         # this also helped delay infection speeds a bit for this simulation
-                new_random_infections = random.sample(population, int(0.01*POPULATION_SIZE)) # TODO: create this through travel, then at some point i have to be happy with it!
-                for person in new_random_infections:
-                    person.infected = True
-                    person.infectious = True
 
                 update_infected(population, houses)
 
 
                 # TODO: MOVE SOME OF THIS LOGIC INTO ABOVE THE STEP, AND UNDER THE DAY, BECAUSE ITS NOT STEP SPECIFIC I FEEL
-                # TODO: I SHOULD ADD A TRAVEL FEATURE THAT IF PERSON NOT WORKING OR SHOPPING, THEN THEY EITHER GO OUTSIDE, OR THEY TRAVEL, AND TRAVELING CARRIES A FIXED RISK OF GETTING INFECTED
-                # THIS WAY WE INTRODUCE NEW INFECTIONS, BECAUSE IN A COMPLETELY CLOSED SOCIETY HERD IMMUNITY WOULD OCCUR QUITE QUICKLY AFTER INFECTIONS AND DEATHS
+            
                 healthy_count.append(len([person for person in population if not person.infected and not person.immune]))
                 immune_count.append(len([person for person in population if person.immune]))
                 infected_count.append(len([person for person in population if person.infected]))
@@ -490,6 +492,17 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                     if person.is_shopping and not person.is_working:
                         Area.move_out(person, House)
                         Area.move_in(person, Store)
+                    
+                    
+                    if person.is_adult and not person.is_working and not person.is_shopping:
+                        if random.random() < 0.4:
+                            person.is_travelling = True
+                            if random.random() < 0.1 and not person.immune:
+                                person.infected = True # I can set it true here and they still will only be able to infect people next day so it's fine setting infected true here already
+                        else:
+                            person.is_walking = True
+                    
+
 
                 calculate_infections(workplaces)
                 calculate_infections(stores)
@@ -509,8 +522,15 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                         Area.move_out(person, Workplace)
                         Area.move_in(person, Store)
 
-                    # leisure walks in this stage too i feel is more accurate than in morning step, but idk
-                    # so those who are adults (and maybe even teens idk) 
+                    elif person.is_walking:
+                        outdoor_locations = [outdoor.location for outdoor in outdoors]
+                        random_outdoor_location = random.choice(outdoor_locations)
+                        person.outdoor_location = random_outdoor_location
+                        Area.move_out(person, House)
+                        Area.move_in(person, Outdoor)
+                    
+                calculate_infections(outdoors)
+
 
                     # TODO: when i do death rates, i will do either do check if dies same day as infected, or each day still infected (before) recovery, i do the % chance they die
                     
@@ -527,6 +547,10 @@ def simulate_day(population, houses, workplaces, stores, outdoors, num_days):
                     if person.is_working and person.is_shopping:
                         Area.move_out(person, Store)
                         Area.move_in(person, House)
+                    if person.is_walking:
+                        Area.move_out(person, Outdoor)
+                        Area.move_in(person, House)
+
 
                 calculate_infections(houses)
 
@@ -613,7 +637,7 @@ def check_grid(population_size, grid_size):
 def plot_counts(healthy_count, infected_count, death_count, immune_count):
     days = list(range(len(healthy_count)))
 
-    sns.set_style("darkgrid")
+    sns.set_style("whitegrid")
     
     plt.plot(days, healthy_count, label='Healthy', color='blue', linewidth=2)
     plt.plot(days, infected_count, label='Infected', color='orange', linewidth=2)
@@ -645,4 +669,3 @@ def sim():
     plot_counts(healthy_count, infected_count, death_count, immune_count)
 
 sim()
-
