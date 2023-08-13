@@ -3,7 +3,7 @@
 In this project, I explored how infections spread through a modelled society/city. Note, this project does **not** aim to provide guidance regarding guidelines for current or future pandemics, but rather served as a way to further develop my Python and simulation-design skills.
 
 ## Welcome to the grid
-<img width="624" alt="Screenshot 2023-08-12 at 23 45 09" src="https://github.com/lblcbc/Epidemiology_19/assets/136857271/8b9d21d5-5dda-42f0-82ad-80f486aa29b0">
+
 <img width="623" alt="Screenshot 2023-08-13 at 23 00 38" src="https://github.com/lblcbc/Epidemiology_19/assets/136857271/6053670e-7cba-43a2-b586-10813dd63766">
 
 Sample grid (city) state, during one of the stages of the many simulation days.
