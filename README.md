@@ -17,21 +17,21 @@ Briefly, in this model, I build a grid environment (20x20 - though it can be sca
 ![baseline_age_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/ae1b5cb9-a2d5-440c-8194-315d34d8f836)
 
 
-### Guidelines I: All infectious (have symptoms) don't leave home
+#### Guidelines I: All infectious (have symptoms) don't leave home
 ##### ~ 10 (2.5%) (1 year)
 ##### ~ 30 (7.5%) (3 years)
 
 ![I_age_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/2f3f342d-a31a-44d6-ba9f-ebedd6c8d4f8)
 
 
-### Guidelines II: Guideline I + masks, assumed to reduce infection rates by 50%
+#### Guidelines II: Guideline I + masks, assumed to reduce infection rates by 50%
 ##### ~ 9 (2.5%) (1 year)
 ##### ~ 26 (7.5%) (3 years)
 
 ![II_age_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/db77e7cf-7b5e-4a24-9c84-4f61e82515d3)
 
 
-### Guidelines III: Guideline II + 90% reduction in shopping, 90% work-from-home, no visiting family, walks, or travelling
+#### Guidelines III: Guideline II + 90% reduction in shopping, 90% work-from-home, no visiting family, walks, or travelling
 ##### ~ 0-1 (0.0-0.25%) (1 year)
 ##### ~ 0-1 (0.0-0.25%) (3 years)
 
