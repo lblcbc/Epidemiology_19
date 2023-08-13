@@ -1,5 +1,12 @@
 # Epidemiology_19 🦠
 
+Welcome to a little Python simulation project
+<img width="624" alt="Screenshot 2023-08-12 at 23 45 09" src="https://github.com/lblcbc/Epidemiology_19/assets/136857271/8b9d21d5-5dda-42f0-82ad-80f486aa29b0">
+
+
+
+
+
 !! This project does not aim to provide guidance about guidelines for current or future pandemics but was rather a way for me to develop my Python and simulation-design skills. Briefly, in this model, I build a grid environment (20x20 - though can be scaled up to "anything") with a set population size (400, can also be scaled up to "anything" (as long as the grid is large enough): the population size is generated roughly following 2019 global population distribution (roughly, weights guide random choices), where then split into "grandparents", "parents", "young adults", and "kids". As seen in the code, grandparents live in their own houses, either single or as a couple, parents (2) are assigned 1-4 kids, and then the kids are assigned grandparents if their parents are assigned parents. Young adults live in couples in their own separate houses as well. House locations are randomly scattered across the grid, and then each eligible person is assigned to their nearest store and workplace (unless at full capacity, in which case assigned to the next closest store). Days are then simulated, primarily involving 5 activities: staying home, going to work, going to the store, walking, travelling, and visiting grandparents (on weekends) - with different conditions and weighted random likelihoods. I did not add a school functionality, though this would not be very difficult to add to this project. I start with no restrictions regardless of infection numbers and then increase guideline restrictions for levels I, II, and III. Below are the summary findings and visuals. 
 
 
