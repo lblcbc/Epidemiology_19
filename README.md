@@ -4,6 +4,8 @@ In this project, I explored how infections spread through a modelled society/cit
 
 ## Welcome to the grid
 
+<img width="624" alt="Screenshot 2023-08-12 at 23 45 09" src="https://github.com/lblcbc/Epidemiology_19/assets/136857271/4c1f9d2c-f4c0-4578-afe0-0097e90651f8">
+
 <img width="623" alt="Screenshot 2023-08-13 at 23 00 38" src="https://github.com/lblcbc/Epidemiology_19/assets/136857271/6053670e-7cba-43a2-b586-10813dd63766">
 
 Sample grid (city) state, during one of the stages of the many simulation days.
