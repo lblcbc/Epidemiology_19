@@ -1,6 +1,7 @@
 # Epidemiology_19 🦠
 
-Welcome to a little Python simulation project
+
+
 <img width="624" alt="Screenshot 2023-08-12 at 23 45 09" src="https://github.com/lblcbc/Epidemiology_19/assets/136857271/8b9d21d5-5dda-42f0-82ad-80f486aa29b0">
 
 
