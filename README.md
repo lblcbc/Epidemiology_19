@@ -10,8 +10,8 @@ Briefly, in this model, I build a grid environment (20x20 - though it can be sca
 
 ## Summary Results
 ### Baseline: 
-##### ~ 18 (4.5%) (1 year)
-###### ~ 50 (12.5%) (3 years)
+~ 18 (4.5%) (1 year)
+##### ~ 50 (12.5%) (3 years)
 
 ### Guideline I: All infectious (have symptoms) don't leave home
 ~ 10 (2.5%) (1 year)
