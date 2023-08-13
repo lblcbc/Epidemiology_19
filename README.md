@@ -43,27 +43,27 @@ Briefly, in this model, I build a grid environment (20x20 - though it can be sca
 
 
 ## Summary Images
-##### Baseline 1 Year
+#### Baseline 1 Year
 
 ![baseline_population_1](https://github.com/lblcbc/Epidemiology_19/assets/136857271/b35795b5-a11e-45c7-b7cd-aa5d2d6e3c46)
 
 ##### To best compare guidelines, we will use a 3-year horizon:
-##### Baseline (3 Years)
+#### Baseline (3 Years)
 
 ![baseline_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/0bbb360c-3e72-4e3e-a72f-49ec3f40c0a6)
 
-##### Guidelines I (3 Years)
+#### Guidelines I (3 Years)
 
 ![I_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/135e4c32-1bd9-47e9-8831-1c58c4e66f94)
 
 
-##### Guidelines II (3 Years)
+#### Guidelines II (3 Years)
 
 ![II_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/6efe6ca1-0ceb-4888-bc79-66643eaa231b)
 
 The images clearly show how masks significantly helped curb infection numbers - particularly stemming from a lower likelihood of infection from travel - the only way new infections are introduced in this simulation. However, in this simulation (which is still far from real-life applicable) mortality rates remained largely similar. Shopping with the elderly and family visits were enough to eventually trigger infections for older age groups. 
 
-##### Guidelines III (3 Years)
+#### Guidelines III (3 Years)
 
 ![III_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/b4ea6f2e-c98e-46b3-8b2a-27ce71da6a98)
 
