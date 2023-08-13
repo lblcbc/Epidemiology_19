@@ -1,22 +1,22 @@
 # Epidemiology_19
 
 
-### Passed
-Baseline: 
+## Passed
+### Baseline: 
 ~ 18 (4.5%) (1 year)
 ~ 50 (12.5%) (3 years)
 
-Guideline I: All infectious (have symptoms) don't leave home
+### Guideline I: All infectious (have symptoms) don't leave home
 ~ 10 (2.5%) (1 year)
 ~ 30 (7.5%) (3 years)
 
-Guideline II: Guideline I + 50% work-from-home, ~50% reduction of extended family visits and travels.
+### Guideline II: Guideline I + 50% work-from-home, ~50% reduction of extended family visits and travels.
 ~ 10 (2.5%) (1 year)
 ~ 30 (7.5%) (3 years)
 
 !! This is because the model was initially, on purpose, built such that if not visiting family or travelling then people would choose to spend leisure by walking outside. HOWEVER, to better represent a city, outdoor space is limited! Therefore, while infection chance is low, many people will have found themselves on the same outdoor grid space as others, and then still returning home to their roommates, parents and/or kids. This insignificantly reduced deaths and infection numbers (even after re-running to check these weren't random best/worst case scenarios).
 
-Guideline III: Guideline II + grandparents rarely rarely (10% chance) leave to shop, 90% work-from-home, no visiting family, walks, or travelling
+### Guideline III: Guideline II + grandparents rarely rarely (10% chance) leave to shop, 90% work-from-home, no visiting family, walks, or travelling
 ~ 0 (0.0%) (1 year)
 ~ 0 (0.0%) (3 years)
 
