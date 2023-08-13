@@ -17,40 +17,55 @@ Briefly, in this model, I build a grid environment (20x20 - though it can be sca
 ![baseline_age_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/ae1b5cb9-a2d5-440c-8194-315d34d8f836)
 
 
-### Guideline I: All infectious (have symptoms) don't leave home
+### Guidelines I: All infectious (have symptoms) don't leave home
 ##### ~ 10 (2.5%) (1 year)
 ##### ~ 30 (7.5%) (3 years)
 
 ![I_age_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/2f3f342d-a31a-44d6-ba9f-ebedd6c8d4f8)
 
 
-### Guideline II: Guideline I + masks, assumed to reduce infection rates by 50%
+### Guidelines II: Guideline I + masks, assumed to reduce infection rates by 50%
 ##### ~ 9 (2.5%) (1 year)
 ##### ~ 26 (7.5%) (3 years)
 
 ![II_age_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/db77e7cf-7b5e-4a24-9c84-4f61e82515d3)
 
 
-### Guideline III: Guideline II + 90% reduction in shopping, 90% work-from-home, no visiting family, walks, or travelling
-##### ~ 0 (0.0%) (1 year)
-##### ~ 0 (0.0%) (3 years)
+### Guidelines III: Guideline II + 90% reduction in shopping, 90% work-from-home, no visiting family, walks, or travelling
+##### ~ 0-1 (0.0-0.25%) (1 year)
+##### ~ 0-1 (0.0-0.25%) (3 years)
 
 ![III_age_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/2a7eb528-2d0b-4079-b019-dd7b2e3d6f91)
 
 
 
-Infection numbers on the histogram show total infections, allowing us to reflect reinfections. This is to not however that as a result, mortality rates can't be estimated from the plot (they will be too low - people can be re-infected, but they can't re-pass). The mortality rates can be seen from (and are anyway dictated by) the code.
+(3-year) infection numbers on the histogram show total infections, allowing us to reflect reinfections. This is to not however that as a result, mortality rates can't be estimated from the plot (they will be too low - people can be re-infected, but they can't re-pass). The mortality rates can be seen from (and are anyway dictated by) the code.
 
 
 ## Summary Images
-###### In order of increasingly strict guidelines (Baselines, I, II, III):
 ##### Baseline 1 Year
 
+![baseline_population_1](https://github.com/lblcbc/Epidemiology_19/assets/136857271/b35795b5-a11e-45c7-b7cd-aa5d2d6e3c46)
+
 ##### To best compare guidelines, we will use a 3-year horizon:
+##### Baseline (3 Years)
+
+![baseline_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/0bbb360c-3e72-4e3e-a72f-49ec3f40c0a6)
+
+##### Guidelines I (3 Years)
+
+![I_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/135e4c32-1bd9-47e9-8831-1c58c4e66f94)
 
 
+##### Guidelines II (3 Years)
 
-The images clearly show how masks significantly helped curb infection numbers - particularly stemming from a lower likelihood of infection from travel - the only way new infections are introduced in this simulation. Unfortunately, in this simulation (which is still far from real-life applicable) mortality rates remained largely similar. Shopping with the elderly and family visits were enough to eventually trigger infections for older age groups. 
+![II_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/6efe6ca1-0ceb-4888-bc79-66643eaa231b)
+
+
+##### Guidelines II (3 Years)
+
+
+The images clearly show how masks significantly helped curb infection numbers - particularly stemming from a lower likelihood of infection from travel - the only way new infections are introduced in this simulation. However, in this simulation (which is still far from real-life applicable) mortality rates remained largely similar. Shopping with the elderly and family visits were enough to eventually trigger infections for older age groups. 
 
 
 
