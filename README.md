@@ -8,9 +8,10 @@ In this project, we use to explore how infections spread through a modelled soci
 Briefly, in this model, I build a grid environment (20x20 - though it can be scaled up to "anything") with a set population size (400, which can also be scaled up to "anything", as long as the grid is large enough). The population size is generated roughly following the 2019 global population distribution (roughly; weights guide random choices), forming "grandparents", "parents", "young adults", and "kids". As seen in the code, grandparents live in their own houses, either single or as a couple, parents (2) are assigned 1-4 kids, and then the kids are assigned grandparents if their parents are assigned parents. Young adults live in couples in their own separate houses as well. House locations are randomly scattered across the grid, and then each eligible person is assigned to their nearest store and workplace (unless at full capacity, in which case assigned to the next closest store etc). The simulated is then run through days, primarily involving 5 activities: staying home, going to work, going to the store, walking, travelling, and visiting grandparents (on weekends) - with different conditions and weighted random likelihoods. I did not add a school functionality, as I found insight from workplaces and restrictions sufficient enough, though this would not be very difficult to add to this project. While this project does not aim to directly simulate the COVID-19 pandemic or guide/critique guidelines, infection rates are informed by the [microCOVID project](https://www.microcovid.org/?casesPastWeek=260&distance=normal&duration=480&interaction=workplace&personCount=13&riskProfile=hasCovid&scenarioName=custom&setting=filtered). I start with no restrictions regardless of infection numbers, and then increase guideline restrictions to levels I, II, and III. Below are the summary findings and visuals. 
 
 
+## Summary Results
 ### Baseline: 
-###### ~ 18 (4.5%) (1 year)
-~ 50 (12.5%) (3 years)
+##### ~ 18 (4.5%) (1 year)
+###### ~ 50 (12.5%) (3 years)
 
 ### Guideline I: All infectious (have symptoms) don't leave home
 ~ 10 (2.5%) (1 year)
