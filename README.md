@@ -27,6 +27,3 @@ We see dramatic results, and we know why. Not only were these guidelines very st
 
 
 Infection numbers on the histogram show total infections, including reinfection. This was done on purpose to take reinfection into account, but I write this to highlight that, as a result, mortality rates can't be estimated from the plot (they will be too low - people can be re-infected, but they can't re-pass). The mortality rates can be seen from the code, and the population size allows for roughly those rates to materialise in the simulation (given random element).
-
-
-The grid could also be scaled up 
