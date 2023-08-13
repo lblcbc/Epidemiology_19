@@ -1,5 +1,7 @@
 # Epidemiology_19
 
+!! This project does not aim to provide guidance about guidelines for current or future pandemics but was rather a way for me to develop my Python and simulation-design skills. Briefly, in this model, I build a grid environment (20x20 - though can be scaled up to "anything") with a set population size (400, can also be scaled up to "anything" (as long as the grid is large enough): the population size is generated roughly following 2019 global population distribution (roughly, weights guide random choices), where then split into "grandparents", "parents", "young adults", and "kids". As seen in the code, grandparents live in their own houses, either single or as a couple, parents (2) are assigned 1-4 kids, and then the kids are assigned grandparents if their parents are assigned parents. Young adults live in couples in their own separate houses as well. House locations are randomly scattered across the grid, and then each eligible person is assigned to their nearest store and workplace (unless at full capacity, in which case assigned to the next closest store). Days are then simulated, primarily involving 5 activities: staying home, going to work, going to the store, walking, travelling, and visiting grandparents (on weekends) - with different conditions and weighted random likelihoods. I start with no restrictions regardless of infection numbers and then increase guideline restrictions for levels I, II, and III. Below are the summary findings and visuals. 
+
 
 ### Baseline: 
 ~ 18 (4.5%) (1 year)
@@ -13,7 +15,7 @@
 ~ 10 (2.5%) (1 year)
 ~ 30 (7.5%) (3 years)
 
-!! This is because the model was initially, on purpose, built such that if not visiting family or travelling then people would choose to spend leisure by walking outside. HOWEVER, to better represent a city, outdoor space is limited! Therefore, while infection chance is low, many people will have found themselves on the same outdoor grid space as others, and then still returning home to their roommates, parents and/or kids. This insignificantly reduced deaths and infection numbers (even after re-running to check these weren't random best/worst case scenarios).
+!! This is because the model was initially, on purpose, built such that if not visiting family or travelling then people would choose to spend leisure by walking outside. However, to better represent a city, outdoor space is limited! Therefore, while infection chance is low, many people will have found themselves on the same outdoor grid space as others, and then still returning home to their roommates, parents and/or kids. This insignificantly reduced deaths and infection numbers (even after re-running to check these weren't random best/worst-case scenarios).
 
 ### Guideline III: Guideline II + grandparents rarely rarely (10% chance) leave to shop, 90% work-from-home, no visiting family, walks, or travelling
 ~ 0 (0.0%) (1 year)
