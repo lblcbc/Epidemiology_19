@@ -61,13 +61,11 @@ Briefly, in this model, I build a grid environment (20x20 - though it can be sca
 
 ![II_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/6efe6ca1-0ceb-4888-bc79-66643eaa231b)
 
-
-##### Guidelines II (3 Years)
-
-
 The images clearly show how masks significantly helped curb infection numbers - particularly stemming from a lower likelihood of infection from travel - the only way new infections are introduced in this simulation. However, in this simulation (which is still far from real-life applicable) mortality rates remained largely similar. Shopping with the elderly and family visits were enough to eventually trigger infections for older age groups. 
 
+##### Guidelines III (3 Years)
 
+![III_population_3](https://github.com/lblcbc/Epidemiology_19/assets/136857271/b4ea6f2e-c98e-46b3-8b2a-27ce71da6a98)
 
 We see dramatic results, and we know why. Not only were these guidelines very strict, there are key factors at play. Firstly, travelling, in this model, was the only way to introduce new infections into what would otherwise be a closed society/economy. If fully closed (as in this case, but regardless of any guidelines), as long as immunity lasts long enough, all infections will occur initially, and then be eradicated. Realistically, however, even if long-haul travel was largely restricted in real-life, inter-city travel remained, and so travelling in earlier guidelines allowed us to introduce this realistic element. The second key detail particularly ensures no passings or even infections among the elderly: no kids/grandkids visits, no walks or travelling, and crucially, not shopping at the same times as the very few workers who still worked in office. Therefore, some workers (whose age group were also the initially infected) would get infected at work, infect their households, but not go to the store at the same time, or visit, elderly (beyond working age)
 
