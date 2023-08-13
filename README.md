@@ -1,7 +1,6 @@
 # Epidemiology_19
 
 
-## Passed
 ### Baseline: 
 ~ 18 (4.5%) (1 year)
 ~ 50 (12.5%) (3 years)
