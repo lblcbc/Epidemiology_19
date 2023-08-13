@@ -71,4 +71,4 @@ We see dramatic results, and we know why. Not only were these guidelines very st
 
 
 
-Overall, the main takeaway, and to no surprise is for all those who are infectious to immediately stay home and not go to work or 
+Overall, the main takeaway, and to no surprise is for all those who are infectious to immediately stay home and not go to work, and doing what you can to reduce the risk of infection, particularly when travelling (meeting new people). Infections are muted more quickly in closed communities.
