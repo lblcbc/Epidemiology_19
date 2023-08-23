@@ -12,6 +12,7 @@ To begin, I build a grid environment (20x20 - though it can be scaled up to "any
 
 
 ## Summary Results
+##### Make sure to pay attention to the y-axis scale
 ### Baseline: Normal activity
 ###### Passed count:
 ##### ~ 18 (4.5%) (1 year)
